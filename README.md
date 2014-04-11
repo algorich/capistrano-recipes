@@ -1,7 +1,16 @@
 # Deploy with capistrano
 
 These configurations depends on capistrano. It deploy to a staging and a
-production environment.
+production environment. It uses:
+
+1. **nginx** with **unicorn** (2 workers, configurable) 
+2. **unicornherder**, monitored by **supervisord** (runing 
+   its web interface at port 9001), to manage the unicorn instances 
+3. **monit** (running its web interface at port 2812) to manage 
+   the database (**mysql** or **postgres**, configurable), nginx 
+   and to watch for the resource usage of unicorn instances and
+   all the previous services. Check each file under `recipes/templates/monit`
+   for the resource limit of the services.
 
 ## Recomentadations
 
