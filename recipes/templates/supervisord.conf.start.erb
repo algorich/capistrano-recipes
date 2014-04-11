@@ -1,0 +1,13 @@
+description     "supervisord"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+setuid <%= unicorn_user %>
+env HOME=/home/<%= unicorn_user %>
+env PATH=$PATH:/home/<%= unicorn_user %>/.rbenv/shims:/home/<%= unicorn_user %>/.rbenv/bin:/usr/local/bin:/usr/bin:/bin
+
+chdir <%= shared_path %>
+exec <%= "supervisord --nodaemon" %>

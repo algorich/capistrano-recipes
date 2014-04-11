@@ -1,0 +1,31 @@
+set daemon 30
+
+set logfile /var/log/monit.log
+set idfile /var/lib/monit/id
+set statefile /var/lib/monit/state
+
+set eventqueue
+  basedir /var/lib/monit/events
+  slots 100
+
+set mailserver localhost port 25
+  with timeout 30 seconds
+
+set alert hugo@algorich.com.br
+<% if rails_env == 'production' %>
+set alert rafael@algorich.com.br
+<% end %>
+
+set httpd port 2812 and
+  <% if user_ssl %>
+  ssl enable
+  pemfile /etc/nginx/server.pem
+  <% end %>
+  allow admin:"<%= monit_password %>"
+
+check system <%= "#{application}_#{rails_env}" %>
+  if loadavg(5min) > 2 for 2 cycles then alert
+  if memory > 75% for 2 cycles then alert
+  if cpu(user) > 75% for 2 cycles then alert
+
+include /etc/monit/conf.d/*
