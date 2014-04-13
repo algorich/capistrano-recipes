@@ -1,5 +1,5 @@
 namespace :info do
-  desc "Iformation about what have to be done after automatic setup is done"
+  desc "Information about what have to be done after automatic setup is done"
   task :setup, roles: :web do
     Capistrano::CLI.password_prompt(
       %q{
