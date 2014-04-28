@@ -104,7 +104,7 @@ end
 
 Run `bundle install` then run `capify .`.
 
-Uncomment the line `load 'deploy/assets'` on the `Cafile`. Then copy all files
+Uncomment the line `load 'deploy/assets'` on the `Capfile`. Then copy all files
 of this project to *config* dir, except the *Capfile*, that should be copied to
 the rails root path.
 
