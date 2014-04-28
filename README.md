@@ -156,4 +156,4 @@ sudo apt-get install sendmail
 
 ### Finally
 
-After that, just run `cap deploy`.
+After that, just run `cap <environment> deploy`.
