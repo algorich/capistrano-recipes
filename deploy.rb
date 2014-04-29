@@ -5,6 +5,12 @@ set :database, 'mysql'
 set :unicorn_workers, 2
 set :user_ssl, false
 
+set :backup, true
+set :backup_host, 'ci.algorich.com.br'
+set :backup_port, '22'
+set :backup_user, 'root'
+set :backup_time, '12:00am'
+
 load 'config/recipes/base'
 load 'config/recipes/nginx'
 load 'config/recipes/unicorn'
@@ -17,6 +23,7 @@ load 'config/recipes/monit'
 load 'config/recipes/ufw'
 load 'config/recipes/fail2ban'
 load 'config/recipes/supervisord'
+load 'config/recipes/backup' if backup
 load 'config/recipes/project_dependencies'
 load 'config/recipes/info' # this should be the last recipe to be loaded
 

@@ -1,0 +1,49 @@
+##
+# Backup Generated: db_backup
+# Once configured, you can run the backup with the following command:
+#
+# $ backup perform -t db_backup [-c <path_to_configuration_file>]
+#
+# For more information about Backup's components, see the documentation at:
+# http://meskyanichi.github.io/backup
+#
+
+database_yml = File.open('<%= current_path %>/config/database.yml')
+RAILS_ENV    = ENV['RAILS_ENV'] || 'development'
+
+require 'yaml'
+config = YAML.load_file(database_yml)
+
+Model.new(:files_backup, 'Description for files_backup') do
+
+  archive :uploaded_files do |archive|
+    archive.add '<%= shared_path %>/system'
+  end
+
+  store_with RSync do |storage|
+    storage.mode = :ssh
+    storage.host = '<%= backup_host %>'
+    storage.port = <%= backup_port %>
+    storage.ssh_user = '<%= backup_user %>'
+    storage.compress = true
+
+    time = Time.now
+    if time.day == 1  # first day of the month
+      # store a monthly
+      path = time.strftime('%B').downcase             # January, February, etc...
+    elsif time.sunday?
+      # store a weekly
+      path = "weekly_#{time.day / 7 + 1}".downcase # Weekly_1 thru Weekly_5
+    else
+      # store a daily
+      path = time.strftime('%A').downcase             # Monday thru Saturday
+    end
+    storage.path = "~/backups/asmelhoresofertas/files/#{ path }"
+  end
+
+  ##
+  # Gzip [Compressor]
+  #
+  compress_with Gzip
+
+end
