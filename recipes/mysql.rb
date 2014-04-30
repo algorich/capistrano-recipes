@@ -20,7 +20,7 @@ namespace :mysql do
   desc 'Create a database for this application.'
   task :create_database, roles: :db, only: {primary: true} do
     run %Q{#{sudo} mysql -u root -p#{mysql_root_password} mysql -e "CREATE DATABASE #{mysql_database};"}
-    run %Q{#{sudo} mysql -u root -p#{mysql_root_password} mysql -e "CREATE USER '#{mysql_user}'@'#{mysql_host}' IDENTIFIED BY '#{mysql_app_password}';"}
+    run %Q{#{sudo} mysql -u root -p#{mysql_root_password} mysql -e "CREATE USER #{mysql_user}@#{mysql_host} IDENTIFIED BY '#{mysql_app_password}';"}
     run %Q{#{sudo} mysql -u root -p#{mysql_root_password} mysql -e "GRANT ALL ON #{mysql_database}.* TO '#{mysql_user}'@'#{mysql_host}';"}
   end
   after 'deploy:setup', 'mysql:create_database'
