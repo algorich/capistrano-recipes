@@ -5,6 +5,8 @@ set :database, 'mysql'
 set :unicorn_workers, 2
 set :user_ssl, false
 
+set :paperclip_optimizer, true
+
 set :backup, true
 set :backup_host, 'ci.algorich.com.br'
 set :backup_port, '22'
