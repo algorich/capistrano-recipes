@@ -16,6 +16,7 @@ namespace :monit do
     unicorn
     syntax
     reload
+    delayed_job if use_delayed_job
   end
   after 'deploy:setup', 'monit:setup'
 

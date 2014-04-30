@@ -16,6 +16,8 @@ set :log_rotate_type, 'time' # can be either 'size' or 'time'
 set :log_rotate_value, 'daily'
 set :log_rotate_keep, 7
 
+set :use_delayed_job, true
+
 load 'config/recipes/base'
 load 'config/recipes/nginx'
 load 'config/recipes/unicorn'
@@ -23,7 +25,7 @@ load "config/recipes/#{database}"
 load 'config/recipes/nodejs'
 load 'config/recipes/rbenv'
 load 'config/recipes/check'
-load 'config/recipes/delayed_job'
+load 'config/recipes/delayed_job' if use_delayed_job
 load 'config/recipes/monit'
 load 'config/recipes/ufw'
 load 'config/recipes/fail2ban'
