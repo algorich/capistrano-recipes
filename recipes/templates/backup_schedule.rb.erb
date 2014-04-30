@@ -1,3 +1,4 @@
 every :day, :at => '<%= backup_time %>' do
   command "RAILS_ENV=<%= rails_env %> backup perform --trigger db_backup --root-path <%= shared_path %>/config/backup"
+  command "RAILS_ENV=<%= rails_env %> backup perform --trigger files_backup --root-path <%= shared_path %>/config/backup"
 end

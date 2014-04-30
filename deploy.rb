@@ -11,6 +11,11 @@ set :backup_port, '22'
 set :backup_user, 'root'
 set :backup_time, '12:00am'
 
+set :log_rotate, true
+set :log_rotate_type, 'time' # can be either 'size' or 'time'
+set :log_rotate_value, 'daily'
+set :log_rotate_keep, 7
+
 load 'config/recipes/base'
 load 'config/recipes/nginx'
 load 'config/recipes/unicorn'
@@ -24,6 +29,7 @@ load 'config/recipes/ufw'
 load 'config/recipes/fail2ban'
 load 'config/recipes/supervisord'
 load 'config/recipes/backup' if backup
+load 'config/recipes/log_rotate' if log_rotate
 load 'config/recipes/project_dependencies'
 load 'config/recipes/info' # this should be the last recipe to be loaded
 

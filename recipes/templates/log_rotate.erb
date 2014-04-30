@@ -1,0 +1,9 @@
+<%= shared_path %>/log/*.log {
+    <%= log_rotate_type == 'time' ? "#{log_rotate_value}" : "size=#{log_rotate_value}" %>
+    missingok
+    rotate <%= log_rotate_keep %>
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+}

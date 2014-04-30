@@ -26,6 +26,11 @@ namespace :backup do
   end
   after "deploy:setup", "backup:setup"
 
+  desc "Run all backups"
+  task :all do
+  end
+  after "backup:all", "backup:database", "backup:files"
+
   desc "Automatically schedule the backup in cron using whenever gem"
   task :schedule do
     run "whenever -f #{shared_path}/config/backup/backup_schedule.rb --update-crontab"

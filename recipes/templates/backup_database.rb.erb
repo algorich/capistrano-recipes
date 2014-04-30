@@ -53,7 +53,7 @@ Model.new(:db_backup, 'Description for db_backup') do
       # store a daily
       path = time.strftime('%A').downcase             # Monday thru Saturday
     end
-    storage.path = "~/backups/asmelhoresofertas/database/#{ path }"
+    storage.path = "~/backups/asmelhoresofertas_<%= rails_env %>/database/#{ path }"
   end
 
   ##
