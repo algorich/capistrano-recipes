@@ -17,7 +17,7 @@ set alert rafael@algorich.com.br
 <% end %>
 
 set httpd port 2812 and
-  <% if user_ssl %>
+  <% if use_ssl %>
   ssl enable
   pemfile /etc/nginx/server.pem
   <% end %>

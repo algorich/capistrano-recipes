@@ -7,7 +7,7 @@ production environment. It uses:
 2. **unicornherder**, monitored by **supervisord** (runing
    its web interface at port 9001), to manage the unicorn instances
 3. **delayed_job** to run background processing, if the `use_delayed_job`
-    flag is set in `deploy.rb`.
+   flag is set in `deploy.rb`.
 4. **monit** (running its web interface at port 2812) to manage
    the database (**mysql** or **postgres**, configurable), nginx
    and to watch for the resource usage of unicorn instances and
@@ -18,8 +18,10 @@ production environment. It uses:
    backups of the database and keep one week of dailies, one month of weeklies,
    and a year of monthlies. The uploaded files will be kept synced through RSync.
 6. **logrotate** to rotate the logs, either by size of time, if `rotate_log` is
-    set in `deploy.rb`. Size AND time conditions are yet not supported, because
-    logrotate 3.81 is still not present in most Linux distributions.
+   set in `deploy.rb`. Size AND time conditions are yet not supported, because
+   logrotate 3.81 is still not present in most Linux distributions.
+7. installs **paperclip-optimizer** dependencies if the flag is set in
+   `deploy.rb`.
 
 ## Recomentadations
 

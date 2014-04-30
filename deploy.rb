@@ -3,7 +3,7 @@ require 'capistrano/ext/multistage'
 
 set :database, 'mysql'
 set :unicorn_workers, 2
-set :user_ssl, false
+set :use_ssl, false
 
 set :paperclip_optimizer, true
 

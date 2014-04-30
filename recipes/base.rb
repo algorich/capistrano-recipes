@@ -23,7 +23,7 @@ namespace :deploy do
 
     desc 'Remove the assets manifest'
     task :remove_manifest, :roles => :web, :except => { :no_release => true } do
-      run %Q{cd #{latest_release} && rm public/assets/manifest-* }
+      run %Q{cd #{latest_release} && rm -f public/assets/manifest-* }
     end
     before 'deploy:assets:update_asset_mtimes', 'deploy:assets:remove_manifest'
 

@@ -17,7 +17,19 @@ upstream unicorn {
 #}
 
 server {
-  listen 80 default deferred;
+  <% if use_ssl %>
+    listen 443 deferred ssl;
+    listen 80 deferred;
+    ssl_certificate ssl.unified.crt;
+    ssl_certificate_key ssl.key;
+    ssl_session_timeout 5m;
+    ssl_protocols SSLv2 SSLv3 TLSv1;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+  <% else %>
+    listen 80 default deferred;
+  <% end %>
+
   server_name <%= server_name %>;
   root <%= current_path %>/public;
 
@@ -48,46 +60,3 @@ server {
   client_max_body_size 10M;
   keepalive_timeout 10;
 }
-
-
-# Just when https is enabled
-#
-#server {
-#  listen 443 deferred;
-#  server_name <%= server_name %>;
-#  root <%= current_path %>/public;
-#
-#  if (-f $document_root/system/maintenance.html) {
-#    return 503;
-#  }
-#  error_page 503 @maintenance;
-#  location @maintenance {
-#    rewrite  ^(.*)$  /system/maintenance.html last;
-#    break;
-#  }
-#
-#  location ^~ /assets/ {
-#    gzip_static on;
-#    expires max;
-#    add_header Cache-Control public;
-#  }
-#
-#  ssl on;
-#  ssl_certificate ssl.unified.crt;
-#  ssl_certificate_key ssl.key;
-#
-#  ssl_session_timeout 5m;
-#
-#  ssl_protocols SSLv2 SSLv3 TLSv1;
-#  ssl_ciphers HIGH:!aNULL:!MD5;
-#  ssl_prefer_server_ciphers on;
-#
-#  try_files $uri/index.html $uri @unicorn;
-#  location @unicorn {
-#    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#    proxy_set_header Host $host;
-#    proxy_set_header X-Forwarded-Proto https;
-#    proxy_redirect off;
-#    proxy_pass http://unicorn;
-#  }
-#}
