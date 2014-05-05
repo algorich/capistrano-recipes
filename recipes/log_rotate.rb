@@ -7,3 +7,4 @@ namespace :log do
     end
   end
 end
+after "deploy:setup", "log:rotate:setup"

@@ -22,6 +22,7 @@ namespace :backup do
     run "mv /tmp/backup_database.rb #{shared_path}/config/backup/models/backup_database.rb"
     run "mv /tmp/backup_files.rb #{shared_path}/config/backup/models/backup_files.rb"
     run "mv /tmp/backup_config.rb #{shared_path}/config/backup/config.rb"
+    # The following should only be used when the backup is done on a vps
     run "ssh #{backup_user}@#{backup_host} -p #{backup_port} -t 'mkdir -p ~/backups'"
   end
   after "deploy:setup", "backup:setup"
@@ -35,6 +36,7 @@ namespace :backup do
   task :schedule do
     run "whenever -f #{shared_path}/config/backup/backup_schedule.rb --update-crontab"
   end
+  after "backup:setup", "backup:schedule"
 
   desc "Run the database backup"
   task :database do
