@@ -17,6 +17,10 @@ production environment. It uses:
    files. If the flag `backup` is set on `deploy.rb`. The script will do daily
    backups of the database and keep one week of dailies, one month of weeklies,
    and a year of monthlies. The uploaded files will be kept synced through RSync.
+   Please, take a look at the backup model templates and customize them to match
+   your needs if the options in `deploy.rb` aren't enough, the **backup**
+   gem is too complete and full of tools for us to parameterize everything in
+   there. You can find its docs [here](http://meskyanichi.github.io/backup/v4).
 6. **logrotate** to rotate the logs, either by size or time, if `rotate_log` is
    set in `deploy.rb`. Size AND time conditions are yet not supported, because
    logrotate 3.81 is still not present in most Linux distributions.
