@@ -13,8 +13,8 @@ production environment. It uses:
    and to watch for the resource usage of unicorn instances and
    all the previous services. Check each file under `recipes/templates/monit`
    for the resource limit of the services.
-5. **whenever** and **backup** gems to backup the database and user uploaded
-   files. If the flag `backup` is set on `deploy.rb`. The script will do daily
+5. **whenever** and **backup** gems to backup the database, user uploaded files,
+   and logs. If the flag `backup` is set on `deploy.rb`. The script will do daily
    backups of the database and keep one week of dailies, one month of weeklies,
    and a year of monthlies. The uploaded files will be kept synced through RSync.
    Please, take a look at the backup model templates and customize them to match
