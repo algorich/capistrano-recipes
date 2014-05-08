@@ -17,6 +17,8 @@ set :log_rotate, true
 set :log_rotate_type, 'time' # can be either 'size' or 'time'
 set :log_rotate_value, 'daily'
 set :log_rotate_keep, 7
+set :backup_logs, true
+set :log_backup_keep, 14
 
 set :use_delayed_job, true
 

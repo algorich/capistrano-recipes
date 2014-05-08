@@ -9,6 +9,7 @@ namespace :backup do
   desc "Setup a template file for database backup"
   task :setup, roles: [:db] do
     template 'backup_files.rb.erb', '/tmp/backup_files.rb'
+    template 'backup_logs.rb.erb', '/tmp/backup_logs.rb'
     template 'backup_database.rb.erb', '/tmp/backup_database.rb'
     template 'backup_config.rb.erb', '/tmp/backup_config.rb'
     template 'backup_schedule.rb.erb', '/tmp/backup_schedule.rb'
@@ -19,6 +20,7 @@ namespace :backup do
     run "mkdir -p #{shared_path}/config/backup/.tmp"
 
     run "mv /tmp/backup_schedule.rb #{shared_path}/config/backup/backup_schedule.rb"
+    run "mv /tmp/backup_logs.rb #{shared_path}/config/backup/models/backup_logs.rb"
     run "mv /tmp/backup_database.rb #{shared_path}/config/backup/models/backup_database.rb"
     run "mv /tmp/backup_files.rb #{shared_path}/config/backup/models/backup_files.rb"
     run "mv /tmp/backup_config.rb #{shared_path}/config/backup/config.rb"
@@ -31,6 +33,7 @@ namespace :backup do
   task :all do
   end
   after "backup:all", "backup:database", "backup:files"
+  after "backup:all", "backup_logs" if backup_logs
 
   desc "Automatically schedule the backup in cron using whenever gem"
   task :schedule do
@@ -41,6 +44,11 @@ namespace :backup do
   desc "Run the database backup"
   task :database do
     run "RAILS_ENV=#{rails_env} backup perform --trigger db_backup --root-path #{shared_path}/config/backup"
+  end
+
+  desc "Run the logs backup"
+  task :logs do
+    run "RAILS_ENV=#{rails_env} backup perform --trigger logs_backup --root-path #{shared_path}/config/backup"
   end
 
   desc "Run the files backup"

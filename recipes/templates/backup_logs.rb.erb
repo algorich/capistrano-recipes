@@ -1,0 +1,36 @@
+##
+# Backup Generated: db_backup
+# Once configured, you can run the backup with the following command:
+#
+# $ backup perform -t db_backup [-c <path_to_configuration_file>]
+#
+# For more information about Backup's components, see the documentation at:
+# http://meskyanichi.github.io/backup
+#
+
+database_yml = File.open('<%= current_path %>/config/database.yml')
+RAILS_ENV    = ENV['RAILS_ENV'] || 'development'
+
+require 'yaml'
+config = YAML.load_file(database_yml)
+
+Model.new(:logs_backup, 'Description for logs_backup') do
+
+  archive :uploaded_files do |archive|
+    archive.add '<%= shared_path %>/log/production.log'
+    archive.add '<%= shared_path %>/log/unicorn.log'
+    <%= "archive.add '#{shared_path}/log/delayed_job.log'" if use_delayed_job %>
+  end
+
+  store_with SCP do |server|
+    server.ip = '<%= backup_host %>'
+    server.port = <%= backup_port %>
+    server.username = '<%= backup_user %>'
+    <%= "server.keep #{log_backup_keep}" if log_backup_keep %>
+
+    storage.path = "~/backups/<%= application %>_<%= rails_env %>"
+  end
+
+  compress_with Gzip
+
+end
