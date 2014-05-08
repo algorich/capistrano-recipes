@@ -12,11 +12,11 @@ namespace :nginx do
     template "nginx_unicorn.erb", "/tmp/nginx_conf"
     run "#{sudo} mv /tmp/nginx_conf /etc/nginx/sites-enabled/#{application}"
     run "#{sudo} rm -f /etc/nginx/sites-enabled/default"
-    restart
+    reload
   end
   after "deploy:setup", "nginx:setup"
 
-  %w[start stop restart].each do |command|
+  %w[start stop restart reload].each do |command|
     desc "#{command} nginx"
     task command, roles: :web do
       run "#{sudo} service nginx #{command}"

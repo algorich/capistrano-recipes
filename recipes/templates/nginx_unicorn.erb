@@ -18,16 +18,20 @@ upstream unicorn {
 
 server {
   <% if use_ssl %>
-    listen 443 deferred ssl;
-    listen 80 deferred;
-    ssl_certificate ssl.unified.crt;
-    ssl_certificate_key ssl.key;
-    ssl_session_timeout 5m;
-    ssl_protocols SSLv2 SSLv3 TLSv1;
-    ssl_ciphers HIGH:!aNULL:!MD5;
-    ssl_prefer_server_ciphers on;
+  listen 443 ssl deferred;
+  listen 80 deferred;
+
+  ssl on;
+  ssl_certificate ssl.unified.crt;
+  ssl_certificate_key ssl.key;
+
+  ssl_session_timeout 5m;
+
+  ssl_protocols SSLv2 SSLv3 TLSv1;
+  ssl_ciphers HIGH:!aNULL:!MD5;
+  ssl_prefer_server_ciphers on;
   <% else %>
-    listen 80 default deferred;
+  listen 80 default deferred;
   <% end %>
 
   server_name <%= server_name %>;
@@ -54,9 +58,18 @@ server {
     proxy_set_header Host $http_host;
     proxy_redirect off;
     proxy_pass http://unicorn;
+    # http://goo.gl/f7YJu
+    <% if use_ssl %>
+    proxy_set_header X-Forwarded-Proto $scheme;
+    <% end %>
   }
 
   error_page 500 502 503 504 /500.html;
-  client_max_body_size 10M;
+  error_page 401 /401.html;
+  error_page 404 /404.html;
+  error_page 413 /413.html;
+  error_page 422 /422.html;
+
+  client_max_body_size 3M;
   keepalive_timeout 10;
 }
