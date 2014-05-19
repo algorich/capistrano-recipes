@@ -30,22 +30,22 @@ namespace :supervisord do
 
   desc 'Stop Supervisord'
   task :stop do
-    run "supervisorctl shutdown"
+    run "cd #{shared_path} && supervisorctl shutdown"
   end
 
   desc 'Reread Supervisord (reloads configuration and restart all)'
   task :reread do
-    run "supervisorctl reread"
+    run "cd #{shared_path} && supervisorctl reread"
   end
 
   desc 'Upate Supervisord (only reloads configuration)'
   task :update do
-    run "supervisorctl update"
+    run "cd #{shared_path} && supervisorctl update"
   end
 
   desc 'Restart our app'
   task :restart_app do
-    run "supervisorctl restart #{application}:*"
+    run "cd #{shared_path} && supervisorctl restart #{application}:*"
   end
 
   commands = {
