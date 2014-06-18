@@ -13,10 +13,10 @@ file=/tmp/supervisor.sock   ; (the path to the socket file)
 ;username=user              ; (default is no username (open server))
 ;password=123               ; (default is no password (open server))
 
-[inet_http_server]         ; inet (TCP) server disabled by default
-port=*:9001        ; (ip_address:port specifier, *:port for all iface)
-username=admin              ; (default is no username (open server))
-password=<%= supervisord_password %>               ; (default is no password (open server))
+[inet_http_server]                     ; inet (TCP) server disabled by default
+port=0.0.0.0:9001                      ; (ip_address:port specifier, *:port for all iface)
+username=admin                         ; (default is no username (open server))
+password=<%= supervisord_password %>   ; (default is no password (open server))
 
 [supervisord]
 logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)
@@ -43,12 +43,12 @@ minprocs=200                 ; (min. avail process descriptors;default 200)
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [supervisorctl]
-serverurl=unix:///tmp/supervisor.sock ; use a unix:// URL  for a unix socket
-;serverurl=*:9001 ; use an http:// url to specify an inet socket
-username=admin              ; should be same as http_username if set
-password=<%= supervisord_password %>                ; should be same as http_password if set
-;prompt=mysupervisor         ; cmd line prompt (default "supervisor")
-;history_file=~/.sc_history  ; use readline history if available
+serverurl=unix:///tmp/supervisor.sock  ; use a unix:// URL  for a unix socket
+;serverurl=http://0.0.0.0:9001         ; use an http:// url to specify an inet socket
+username=admin                         ; should be same as http_username if set
+password=<%= supervisord_password %>   ; should be same as http_password if set
+;prompt=mysupervisor                   ; cmd line prompt (default "supervisor")
+;history_file=~/.sc_history            ; use readline history if available
 
 ; The below sample program section shows all possible program subsection values,
 ; create one or more 'real' program: sections to be able to control them under
