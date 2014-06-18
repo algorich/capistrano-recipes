@@ -2,19 +2,21 @@ upstream unicorn {
   server unix:/tmp/unicorn.<%= application %>.sock fail_timeout=0;
 }
 
-# Just for production when should have a www redirect
-# http://stackoverflow.com/q/7947030/529418
-#
-# After uncomment it, run `nginx -t`. If you get this error:
+# run `nginx -t`. If you get this error:
 #  nginx: [emerg] could not build the server_names_hash, you should increase server_names_hash_bucket_size: 32
 # uncomment the line "server_names_hash_bucket_size 64;" on /etc/nginx/nginx.conf
 # For more info: http://migre.me/gAT6e
-#
-#server {
-#    listen 80 default deferred;
-#    server_name www.<%= server_name %>;
-#    return 301 $scheme://<%= server_name %>$request_uri;
-#}
+
+# Just for production when should have a www redirect
+# http://stackoverflow.com/q/7947030/529418
+
+<% if www_redirect %>
+server {
+    listen 80;
+    server_name www.<%= server_name %>;
+    return 301 $scheme://<%= server_name %>$request_uri;
+}
+<% end %>
 
 server {
   <% if use_ssl %>

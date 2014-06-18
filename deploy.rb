@@ -5,6 +5,8 @@ set :database, 'mysql'
 set :unicorn_workers, 2
 set :use_ssl, false
 
+set :www_redirect, true
+
 set :paperclip_optimizer, true
 
 set :backup, true
@@ -41,7 +43,7 @@ load 'config/recipes/info' # this should be the last recipe to be loaded
 
 set :stages, %w(production staging)
 
-set :application, 'application name'
+set :application, 'application-name'
 set :user, 'deploy'
 set :deploy_to, "/home/#{user}/apps/#{application}"
 set :deploy_via, :remote_cache
@@ -50,6 +52,7 @@ set :use_sudo, false
 set :scm, 'git'
 set :repository, "git@gitlab.com:algorich/#{application}.git"
 
+set :project_name, 'Project Name'
 set :maintenance_template_path, File.expand_path('../recipes/templates/maintenance.html.erb', __FILE__)
 
 default_run_options[:pty] = true
