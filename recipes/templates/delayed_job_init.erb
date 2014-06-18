@@ -17,7 +17,7 @@ set -e
 # Feel free to change any of the following variables for your app:
 TIMEOUT=${TIMEOUT-60}
 APP_ROOT=<%= current_path %>
-PID=<%= "#{shared_path}/pids/delayed_job.pid" %>
+PID=<%= delayed_job_pid %>
 CMD="<%= "/usr/bin/env RAILS_ENV=#{rails_env} #{current_path}/bin/delayed_job" %>"
 AS_USER=<%= unicorn_user %>
 set -u

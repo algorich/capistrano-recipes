@@ -1,6 +1,6 @@
 require 'delayed/recipes'
 
-set_default(:delayed_job_pid_file) { "#{current_path}/tmp/pids/delayed_job.pid" }
+set_default(:delayed_job_pid) { "#{current_path}/tmp/pids/delayed_job.pid" }
 set_default(:delayed_job_command) { 'bin/delayed_job' }
 
 # http://migre.me/gyN2k

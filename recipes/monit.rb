@@ -10,7 +10,7 @@ namespace :monit do
 
   desc 'Setup all Monit configuration'
   task :setup do
-    monit_config 'monitrc', '/etc/monit/monitrc'
+    monit_config 'monitrc', destination: '/etc/monit/monitrc'
     nginx
     eval(database)
     unicorn
@@ -22,10 +22,10 @@ namespace :monit do
 
   task(:nginx, roles: :web) { monit_config 'nginx' }
   task(database.to_sym, roles: :db) { monit_config database }
-  task(:unicorn, roles: :app) { monit_config 'unicorn' }
+  task(:unicorn, roles: :app) { monit_config 'unicorn', multiple: true }
 
   task(:delayed_job, roles: :web) do
-    monit_config 'delayed_job'
+    monit_config 'delayed_job', multiple: true
     template 'delayed_job_init.erb', '/tmp/delayed_job'
     run 'chmod +x /tmp/delayed_job'
     run "#{sudo} mv /tmp/delayed_job /etc/init.d/delayed_job_#{application}"
@@ -39,10 +39,14 @@ namespace :monit do
   end
 end
 
-def monit_config(name, destination = nil)
-  destination ||= "/etc/monit/conf.d/#{name}.conf"
+def monit_config(name, opts = {})
+  opts = { destination: nil, multiple: false}.merge(opts)
+
+  dest_name = opts[:multiple] ? "#{name}_#{application}.conf" ? name
+  opts[:destination] ||= "/etc/monit/conf.d/#{dest_name}.conf"
+
   template "monit/#{name}.erb", "/tmp/monit_#{name}"
-  run "#{sudo} mv /tmp/monit_#{name} #{destination}"
-  run "#{sudo} chown root #{destination}"
-  run "#{sudo} chmod 600 #{destination}"
+  run "#{sudo} mv /tmp/monit_#{name} #{opts[:destination]}"
+  run "#{sudo} chown root #{opts[:destination]}"
+  run "#{sudo} chmod 600 #{opts[:destination]}"
 end
