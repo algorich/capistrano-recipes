@@ -10,7 +10,7 @@ namespace :project_dependencies do
     # paperclip-optimizer
     if paperclip_optimizer
       run "#{sudo} apt-get install -y advancecomp gifsicle jhead jpegoptim libjpeg-progs optipng pngcrush"
-      run "npm install -g svgo"
+      run "#{sudo} npm install -g svgo"
     end
   end
   after 'deploy:install', 'project_dependencies:install'
