@@ -42,7 +42,7 @@ end
 def monit_config(name, opts = {})
   opts = { destination: nil, multiple: false}.merge(opts)
 
-  dest_name = opts[:multiple] ? "#{name}_#{application}.conf" ? name
+  dest_name = opts[:multiple] ? "#{name}_#{application}.conf" : name
   opts[:destination] ||= "/etc/monit/conf.d/#{dest_name}.conf"
 
   template "monit/#{name}.erb", "/tmp/monit_#{name}"
