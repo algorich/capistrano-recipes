@@ -19,7 +19,7 @@ namespace :supervisord do
     template "supervisord.conf.erb", "#{shared_path}/supervisord.conf"
     template "supervisord.conf.start.erb", "#{shared_path}/supervisord.conf.start"
     run "#{sudo} mv #{shared_path}/supervisord.conf.start /etc/init/supervisord.#{application}.conf"
-    run "#{sudo} start supervisord"
+    run "#{sudo} start supervisord.#{application}"
   end
   after 'deploy:setup', 'supervisord:setup'
 
