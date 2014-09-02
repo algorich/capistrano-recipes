@@ -1,0 +1,12 @@
+server {
+  listen 80;
+  server_name doc.<%= server_name %>;
+
+  location / {
+  	root <%= shared_path %>/doc;
+
+    # Basic Auth
+    auth_basic "Restricted";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+  }
+}

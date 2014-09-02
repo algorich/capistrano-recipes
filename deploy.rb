@@ -7,6 +7,9 @@ set :use_ssl, false
 
 set :www_redirect, true
 
+# depends of yard gem. see doc receipe.
+set :doc, true
+
 set :paperclip_optimizer, true
 
 set :backup, true
@@ -39,6 +42,7 @@ load 'config/recipes/supervisord'
 load 'config/recipes/backup' if backup
 load 'config/recipes/log_rotate' if log_rotate
 load 'config/recipes/project_dependencies'
+load 'config/recipes/doc' if doc
 load 'config/recipes/info' # this should be the last recipe to be loaded
 
 set :stages, %w(production staging)
