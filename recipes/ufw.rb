@@ -12,6 +12,7 @@ namespace :ufw do
     run "#{sudo} ufw default deny incoming" # deny all incomming
     run "#{sudo} ufw default allow outgoing" # allow all outgoing
     run "#{sudo} ufw allow 22/tcp" # allow ssh
+    run "#{sudo} ufw allow 9001/tcp" # allow supervisord web interface
     run "#{sudo} ufw allow 80/tcp" # allow www
     run "#{sudo} ufw allow 443/tcp" # allow www via https
     run "#{sudo} ufw allow 2812/tcp" # allow monit web inteface
