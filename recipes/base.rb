@@ -7,6 +7,12 @@ def set_default(name, *args, &block)
   set(name, *args, &block) unless exists?(name)
 end
 
+def compile_assets
+  %x{RAILS_ENV=#{rails_env} rake assets:precompile}
+  %x{rsync --recursive --times --rsh=ssh --compress --human-readable --progress public/assets #{user}@#{server_name}:#{shared_path}}
+  %x{rake assets:clobber}
+end
+
 namespace :deploy do
   desc 'Install everything into the server'
   task :install do
@@ -29,13 +35,16 @@ namespace :deploy do
 
     desc 'Run the precompile task locally and rsync with shared'
     task :precompile, :roles => :web, :except => { :no_release => true } do
-      from = source.next_revision(current_revision)
-      if releases.length <= 1 || capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ | wc -l").to_i > 0
-        %x{RAILS_ENV=#{rails_env} rake assets:precompile}
-        %x{rsync --recursive --times --rsh=ssh --compress --human-readable --progress public/assets #{user}@#{server_name}:#{shared_path}}
-        %x{rake assets:clobber}
+      begin
+        from = source.next_revision(current_revision)
+      rescue Exception
+        compile_assets
       else
-        logger.info 'Skipping asset pre-compilation because there were no asset changes'
+        if releases.length <= 1 || capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ | wc -l").to_i > 0
+          compile_assets
+        else
+          logger.info 'Skipping asset pre-compilation because there were no asset changes'
+        end
       end
     end
   end
