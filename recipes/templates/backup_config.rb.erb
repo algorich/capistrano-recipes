@@ -83,17 +83,18 @@
 #     s3.secret_access_key = "my_secret_access_key"
 #   end
 #
-#   Notifier::Mail.defaults do |mail|
-#     mail.from                 = 'sender@email.com'
-#     mail.to                   = 'receiver@email.com'
-#     mail.address              = 'smtp.gmail.com'
-#     mail.port                 = 587
-#     mail.domain               = 'your.host.name'
-#     mail.user_name            = 'sender@email.com'
-#     mail.password             = 'my_password'
-#     mail.authentication       = 'plain'
-#     mail.encryption           = :starttls
-#   end
+<% if backup_notification %>
+  Notifier::Mail.defaults do |mail|
+    mail.from                 = <%= notification_mail_from %>
+    mail.to                   = <%= notification_mail_to %>
+    mail.address              = <%= notification_mail_address %>
+    mail.port                 = <%= notification_mail_port %>
+    mail.domain               = <%= notification_mail_domain %>
+    mail.user_name            = <%= notification_mail_user_name %>
+    mail.password             = <%= notification_mail_password %>
+    mail.authentication       = <%= notification_mail_authentication %>
+    mail.encryption           = <%= notification_mail_encryption %>
+<% end %>
 
 ##
 # Preconfigured Models

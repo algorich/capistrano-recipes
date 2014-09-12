@@ -12,11 +12,30 @@ set :doc, true
 
 set :paperclip_optimizer, true
 
+
+# backup stuff
 set :backup, true
 set :backup_host, 'ci.algorich.com.br'
 set :backup_port, '22'
 set :backup_user, 'root'
 set :backup_time, '12:00am'
+
+set :backup_notification, true
+# if backup_notification is false, you can delete all these notification stuff
+set :backup_notification_on_success, true
+set :backup_notification_on_warning, true
+set :backup_notification_on_failure, true
+
+set :notification_mail_from,            'sender@email.com'
+set :notification_mail_to,              'receiver@email.com'
+set :notification_mail_address,         'smtp.gmail.com'
+set :notification_mail_port,            587
+set :notification_mail_domain,          'your.host.name'
+set :notification_mail_user_name,       'sender@email.com'
+set :notification_mail_password,        'my_password'
+set :notification_mail_authentication,  'plain'
+set :notification_mail_encryption,      :starttls
+# end of backup stuff
 
 set :log_rotate, true
 set :log_rotate_type, 'time' # can be either 'size' or 'time'

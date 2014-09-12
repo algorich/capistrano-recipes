@@ -16,6 +16,12 @@ config = YAML.load_file(database_yml)
 
 Model.new(:logs_backup, 'Description for logs_backup') do
 
+  notify_by Mail do |mail|
+    mail.on_success = <%= backup_notification_on_success %>
+    mail.on_warning = <%= backup_notification_on_warning %>
+    mail.on_failure = <%= backup_notification_on_failure %>
+  end
+
   archive :uploaded_files do |archive|
     archive.add '<%= shared_path %>/log/production.log'
     archive.add '<%= shared_path %>/log/unicorn.log'
