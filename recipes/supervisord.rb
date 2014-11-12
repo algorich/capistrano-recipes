@@ -30,7 +30,7 @@ namespace :supervisord do
 
   desc 'Stop Supervisord'
   task :stop do
-    run "cd #{shared_path} && supervisorctl shutdown"
+    run "#{sudo} stop supervisord.#{application}"
   end
 
   desc 'Reread Supervisord (reloads configuration and restart all)'
