@@ -3,7 +3,9 @@
 These configurations depends on capistrano. It deploys to a staging and a
 production environment. It uses:
 
-1. **nginx** with support for **unicorn** and **passenger** (both totally configurable). **Bonus**: support for automatically starting a **websocket server** when using the gem **websocket-rails** and **passenger**.
+1. **nginx** with support for **unicorn** and **passenger** (both totally configurable). 
+    1. **Bonus 1**: one of the most secure **nginx** configuration regarding SSL, being capable of **grade A** at <a href="https://www.ssllabs.com/ssltest/analyze.html" target="_blank">Qualys SSL Labs test</a>
+    1. **Bonus 2**: support for automatically starting a **websocket server** when using the gem **websocket-rails** and **passenger**.
 2. **unicornherder**, monitored by **supervisord** (runing
    its web interface at port 9001), to manage the unicorn instances
 3. **delayed_job** to run background processing, if the `use_delayed_job`
