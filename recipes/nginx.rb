@@ -25,7 +25,9 @@ namespace :nginx do
     run "#{sudo} ln -sf /etc/nginx/sites-available/#{application} /etc/nginx/sites-enabled/#{application}"
     run "#{sudo} rm -f /etc/nginx/sites-enabled/default"
     # uncomment passenger_root line in nginx_conf
-    run "#{sudo} sed '/.*#.*passenger_root.*/ s/.*#//' /etc/nginx/nginx.conf"
+    run "#{sudo} sed -i '/.*#.*passenger_root.*/ s/# *//' /etc/nginx/nginx.conf" if webserver == :passenger
+    run "#{sudo} sed '/.*#.*server_tokens.*/ s/# *//' /etc/nginx/nginx.conf"
+
     reload
   end
   after "deploy:setup", "nginx:setup"
