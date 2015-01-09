@@ -24,7 +24,7 @@ production environment. It uses:
 6. **logrotate** to rotate the logs, either by size or time, if `rotate_log` is
    set in `deploy.rb`. Size AND time conditions are yet not supported, because
    logrotate 3.81 is still not present in most Linux distributions.
-7. installs **paperclip-optimizer** dependencies if the flag is set in
+7. installs **paperclip-optimizer** (a gem to losslessly compress every image uploaded through **paperclip**) dependencies if the flag is set in
    `deploy.rb`.
 
 ## Recomentadations
