@@ -1,6 +1,6 @@
 # Deploy with capistrano
 
-These configurations depends on capistrano. It deploy to a staging and a
+These configurations depends on capistrano. It deploys to a staging and a
 production environment. It uses:
 
 1. **nginx** with support for **unicorn** and **passenger** (both totally configurable). **Bonus**: support for automatically starting a **websocket server** when using the gem **websocket-rails** and **passenger**.
@@ -27,7 +27,7 @@ production environment. It uses:
 7. installs **paperclip-optimizer** (a gem to losslessly compress every image uploaded through **paperclip**) dependencies if the flag is set in
    `deploy.rb`.
 
-## Recomentadations
+## Recomendations
 
 Before deploy to production, use the following gems:
 
