@@ -18,6 +18,12 @@ server {
 }
 <% end %>
 
+<% if webserver == :passenger && websocket_rails %>
+upstream websocket {
+    server localhost:3001;
+}
+<% end %>
+
 server {
   <% if use_ssl %>
   listen 443 ssl deferred;
@@ -39,6 +45,14 @@ server {
   server_name <%= server_name %>;
   root <%= current_path %>/public;
 
+  <% if webserver == :passenger %>
+  passenger_ruby /home/deploy/.rbenv/shims/ruby;
+  passenger_enabled on;
+  passenger_app_env <%= rails_env %>;
+  passenger_show_version_in_header off;
+  passenger_sticky_sessions on;
+  <% end %>
+
   if (-f $document_root/system/maintenance.html) {
     return 503;
   }
@@ -53,6 +67,15 @@ server {
     expires max;
     add_header Cache-Control public;
   }
+
+  <% if webserver == :passenger && websocket_rails %>
+  location /websocket {
+      proxy_pass http://websocket/websocket;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+  }
+  <% end %>
 
   try_files $uri/index.html $uri @unicorn;
   location @unicorn {
