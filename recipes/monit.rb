@@ -13,7 +13,8 @@ namespace :monit do
     monit_config 'monitrc', destination: '/etc/monit/monitrc'
     nginx
     eval(database)
-    unicorn
+    unicorn if webserver == :unicorn
+    websocket_rails_server if websocket_rails
     syntax
     reload
     delayed_job if use_delayed_job
@@ -23,6 +24,7 @@ namespace :monit do
   task(:nginx, roles: :web) { monit_config 'nginx' }
   task(database.to_sym, roles: :db) { monit_config database }
   task(:unicorn, roles: :app) { monit_config 'unicorn', multiple: true }
+  task(:websocket_rails_server, roles: :web) { monit_config 'websocket_rails' }
 
   task(:delayed_job, roles: :web) do
     monit_config 'delayed_job', multiple: true

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+command="$1_server"
+
+cd <%= current_path %> && PATH=/home/deploy/.rbenv/bin:/home/deploy/.rbenv/shims:$PATH RAILS_ENV=<%= rails_env %> bundle exec rake websocket_rails:$command

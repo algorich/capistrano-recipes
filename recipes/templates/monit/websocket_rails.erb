@@ -1,0 +1,5 @@
+check process websocket_rails with pidfile <%= websocket_rails_pid %>
+  start program = "<%= shared_path %>/websocket_rails_server start"
+      as uid deploy and gid sudo
+  stop program = "<%= shared_path %>/websocket_rails_server stop"
+  if 5 restarts within 5 cycles then timeout

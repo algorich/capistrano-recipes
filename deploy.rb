@@ -5,13 +5,16 @@ set :database, 'mysql'
 set :unicorn_workers, 2
 set :use_ssl, false
 
+
+set :webserver, :passenger
+set :websocket_rails, true
+
 set :www_redirect, true
 
-# depends of yard gem. see doc receipe.
+# depends of yard gem. see doc recipe.
 set :doc, true
 
 set :paperclip_optimizer, true
-
 
 # backup stuff
 set :backup, true
@@ -46,9 +49,12 @@ set :log_backup_keep, 14
 
 set :use_delayed_job, true
 
+
 load 'config/recipes/base'
 load 'config/recipes/nginx'
-load 'config/recipes/unicorn'
+load 'config/recipes/unicorn' if webserver == :unicorn
+load 'config/recipes/passenger' if webserver == :passenger
+load 'config/recipes/websocket_rails' if websocket_rails
 load "config/recipes/#{database}"
 load 'config/recipes/nodejs'
 load 'config/recipes/rbenv'
@@ -57,7 +63,7 @@ load 'config/recipes/delayed_job' if use_delayed_job
 load 'config/recipes/monit'
 load 'config/recipes/ufw'
 load 'config/recipes/fail2ban'
-load 'config/recipes/supervisord'
+load 'config/recipes/supervisord' if webserver == :unicorn
 load 'config/recipes/backup' if backup
 load 'config/recipes/log_rotate' if log_rotate
 load 'config/recipes/project_dependencies'
@@ -66,7 +72,8 @@ load 'config/recipes/info' # this should be the last recipe to be loaded
 
 set :stages, %w(production staging)
 
-set :application, 'application-name'
+set :application, 'Project Name'
+
 set :user, 'deploy'
 set :deploy_to, "/home/#{user}/apps/#{application}"
 set :deploy_via, :remote_cache
@@ -75,7 +82,6 @@ set :use_sudo, false
 set :scm, 'git'
 set :repository, "git@gitlab.com:algorich/#{application}.git"
 
-set :project_name, 'Project Name'
 set :maintenance_template_path, File.expand_path('../recipes/templates/maintenance.html.erb', __FILE__)
 
 default_run_options[:pty] = true
