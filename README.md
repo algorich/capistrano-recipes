@@ -159,6 +159,10 @@ cap <environment> deploy:install
 cap <environment> deploy:setup
 ```
 
+### Set production configs
+
+- `secret_key_base` at `config/secrets.yml`
+
 ### First deploy
 
 ``` bash
