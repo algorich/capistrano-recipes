@@ -1,3 +1,5 @@
+require 'base64'
+
 namespace :doc do
   set_default(:doc_user) { Capistrano::CLI.password_prompt 'Doc access User: ' }
   set_default(:doc_password) { Capistrano::CLI.password_prompt 'Doc access Encypted Password: ' }
