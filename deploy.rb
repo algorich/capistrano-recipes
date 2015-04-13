@@ -1,12 +1,12 @@
 require 'bundler/capistrano'
 require 'capistrano/ext/multistage'
 
-set :database, 'mysql'
+set :database, 'postgresql'
 set :unicorn_workers, 2
 set :use_ssl, false
 
 
-set :webserver, :passenger
+set :webserver, :unicorn
 set :websocket_rails, true
 
 set :www_redirect, true
@@ -18,9 +18,9 @@ set :paperclip_optimizer, true
 
 # backup stuff
 set :backup, true
-set :backup_host, 'ci.algorich.com.br'
+set :backup_host, 'backups.algorich.com.br'
 set :backup_port, '22'
-set :backup_user, 'root'
+set :backup_user, 'foo'
 set :backup_time, '12:00am'
 
 set :backup_notification, true
@@ -49,6 +49,24 @@ set :log_backup_keep, 14
 
 set :use_delayed_job, true
 
+set :stages, %w(production staging)
+
+set :application, 'Project Name'
+
+set :user, 'deploy'
+set :deploy_to, "/home/#{user}/apps/#{application}"
+set :deploy_via, :remote_cache
+set :use_sudo, false
+
+set :scm, 'git'
+set :repository, "git@bitbucket.org:algorich/#{application}.git"
+
+set :maintenance_template_path, File.expand_path('../recipes/templates/maintenance.html.erb', __FILE__)
+
+default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
+
+after 'deploy', 'deploy:cleanup' # keep only the last 5 releases
 
 load 'config/recipes/base'
 load 'config/recipes/nginx'
@@ -69,22 +87,3 @@ load 'config/recipes/log_rotate' if log_rotate
 load 'config/recipes/project_dependencies'
 load 'config/recipes/doc' if doc
 load 'config/recipes/info' # this should be the last recipe to be loaded
-
-set :stages, %w(production staging)
-
-set :application, 'Project Name'
-
-set :user, 'deploy'
-set :deploy_to, "/home/#{user}/apps/#{application}"
-set :deploy_via, :remote_cache
-set :use_sudo, false
-
-set :scm, 'git'
-set :repository, "git@gitlab.com:algorich/#{application}.git"
-
-set :maintenance_template_path, File.expand_path('../recipes/templates/maintenance.html.erb', __FILE__)
-
-default_run_options[:pty] = true
-ssh_options[:forward_agent] = true
-
-after 'deploy', 'deploy:cleanup' # keep only the last 5 releases
