@@ -18,7 +18,7 @@ BASHRC
     run %q{eval "$(rbenv init -)"}
     run 'git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build'
     # Ruby dependencies. More info: https://github.com/sstephenson/ruby-build/wiki
-    run "#{sudo} apt-get -y install build-essential autoconf libssl-dev libyaml-dev libreadline6 libreadline6-dev zlib1g zlib1g-dev"
+    run "#{sudo} apt-get -y install build-essential autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev"
 
     run "rbenv install #{ruby_version}"
     run "rbenv global #{ruby_version}"
