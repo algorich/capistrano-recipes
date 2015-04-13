@@ -25,13 +25,7 @@ namespace :monit do
   task(database.to_sym, roles: :db) { monit_config database }
   task(:unicorn, roles: :app) { monit_config 'unicorn', multiple: true }
   task(:websocket_rails_server, roles: :web) { monit_config 'websocket_rails' }
-
-  task(:delayed_job, roles: :web) do
-    monit_config 'delayed_job', multiple: true
-    template 'delayed_job_init.erb', '/tmp/delayed_job'
-    run 'chmod +x /tmp/delayed_job'
-    run "#{sudo} mv /tmp/delayed_job /etc/init.d/delayed_job_#{application}"
-  end
+  task(:delayed_job, roles: :web) { monit_config 'delayed_job', multiple: true }
 
   %w[start stop restart syntax reload].each do |command|
     desc "Run Monit #{command} script"
@@ -44,7 +38,7 @@ end
 def monit_config(name, opts = {})
   opts = { destination: nil, multiple: false}.merge(opts)
 
-  dest_name = opts[:multiple] ? "#{name}_#{application}.conf" : name
+  dest_name = opts[:multiple] ? "#{name}_#{application}" : name
   opts[:destination] ||= "/etc/monit/conf.d/#{dest_name}.conf"
 
   template "monit/#{name}.erb", "/tmp/monit_#{name}"

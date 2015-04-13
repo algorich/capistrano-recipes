@@ -1,3 +1,4 @@
-check process <%= application %>_delayed_job with pidfile <%= delayed_job_pid %>
+check process delayed_job_<%= application %> with pidfile <%= delayed_job_pid %>
   start program = "/etc/init.d/delayed_job_<%= application %> start"
   stop program = "/etc/init.d/delayed_job_<%= application %> stop"
+  restart program = "/etc/init.d/delayed_job_<%= application %> restart"

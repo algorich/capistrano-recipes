@@ -1,63 +1,27 @@
-#!/bin/sh
-### BEGIN INIT INFO
-# Provides:          unicorn
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Manage unicorn server
-# Description:       Start, stop, restart unicorn server for a specific application.
-### END INIT INFO
-set -e
+require 'delayed/recipes'
 
-. /lib/init/vars.sh
+set_default(:delayed_job_pid)     { "#{current_path}/tmp/pids/delayed_job.pid" }
+set_default(:delayed_job_command) { 'bin/delayed_job' }
 
-. /lib/lsb/init-functions
+after 'supervisord:stop',        'delayed_job:stop'
+after 'supervisord:start',       'delayed_job:start'
+after 'supervisord:restart_app', 'delayed_job:restart'
 
-# Feel free to change any of the following variables for your app:
-TIMEOUT=${TIMEOUT-60}
-APP_ROOT=<%= current_path %>
-PID=<%= delayed_job_pid %>
-CMD="<%= "/usr/bin/env RAILS_ENV=#{rails_env} #{current_path}/bin/delayed_job" %>"
-AS_USER=<%= unicorn_user %>
-set -u
 
-OLD_PIN="$PID.oldbin"
 
-sig () {
-  test -s "$PID" && kill -$1 `cat $PID`
-}
+# If you want to use command line options, for example to start multiple
+# workers, define a Capistrano variable delayed_job_args:
+#
+#   set :delayed_job_args, '-n 2'
 
-run () {
-  if [ "$(id -un)" = "$AS_USER" ]; then
-    eval $1
-  else
-    su -c "$1" - $AS_USER
-  fi
-}
 
-case "$1" in
-start)
-  sig 0 && echo >&2 "Already running" && exit 0
-  run "$CMD start"
-  ;;
-stop)
-  run "$CMD stop" && exit 0
-  echo >&2 "Not running"
-  ;;
-status)
-  status_of_proc -p $PID "$CMD" "Delayed Job"
-  ;;
-force-stop)
-  sig TERM && exit 0
-  echo >&2 "Not running"
-  ;;
-restart|reload)
-  run "$CMD stop"
-  run "$CMD start"
-  ;;
-*)
-  echo >&2 "Usage: $0 <start|stop|restart>"
-  exit 1
-  ;;
-esac
+namespace :delayed_job do
+  desc 'Setup Unicorn initializer and app configuration'
+  task :setup, roles: :app do
+    template 'delayed_job_init.erb', '/tmp/delayed_job_init'
+    run 'chmod +x /tmp/delayed_job_init'
+    run "#{sudo} mv /tmp/delayed_job_init /etc/init.d/delayed_job_#{application}"
+    run "#{sudo} update-rc.d -f delayed_job_#{application} defaults"
+  end
+  after 'deploy:setup', 'delayed_job:setup'
+end
